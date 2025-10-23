@@ -216,22 +216,34 @@ class CaptionPostProcessor:
             # Prepare the prompt for summarization
             captions_text = window.get_captions_text()
             prompt = f"""
-Summarize the following video captions from a {self.window_duration}-second window. 
-Focus on:
-- Objects and people present
-- Actions and movements
-- Activities happening
-- Changes in the scene
+Analyze the following video captions from a {self.window_duration}-second window and create a declarative summary focused on object movements.
 
-Avoid focusing on:
-- Colors and lighting details
-- Background elements unless relevant to action
-- Static descriptions
+For each object or person in the scene, identify:
+1. Initial location/position
+2. Movement trajectory (where it moved to)
+3. Final location/position
+4. Whether it remained stationary
+
+Format the summary as:
+"Object started at [initial_location], moved to [final_location]. Object2 began at [initial_location], remained stationary. Object3 started at [initial_location], moved to [intermediate_location], then to [final_location]."
+
+Focus on:
+- Object identification (Person, laptop, cup, papers, phone, etc.)
+- Clear starting positions
+- Movement paths and destinations
+- Stationary objects that didn't move
+- Spatial relationships and positions
+
+Avoid:
+- Colors, lighting, or visual details
+- Emotional or subjective descriptions
+- Background elements unless they moved
+- Static environmental descriptions
 
 Captions from {window.get_timestamp_range()}:
 {captions_text}
 
-Provide a concise summary of what happened during this time period:
+Provide a declarative summary of object movements:
 """
             
             # Generate summary
